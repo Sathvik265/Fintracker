@@ -8,26 +8,39 @@ const connectDb = require("./config/db");
 // config dot env file
 dotenv.config();
 
-//database call
+// database call
 connectDb();
 
-//rest object
+// rest object
 const app = express();
 
-//middlewares
+// middlewares
 app.use(morgan("dev"));
 app.use(express.json());
-app.use(cors());
 
-//routes
+// CORS configuration for production
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "*",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
+
+// routes
 app.use("/api/v1/users", require("./routes/userRoute"));
 app.use("/api/v1/transactions", require("./routes/transactionRoute"));
 app.use("/api/v1/budgets", require("./routes/budgetRoute"));
 
-//port
-const PORT = 8080 || process.env.PORT;
+// Health check endpoint for Render
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", message: "Server is running" });
+});
 
-//listen server
+// port - use environment variable first
+const PORT = process.env.PORT || 8080;
+
+// listen server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

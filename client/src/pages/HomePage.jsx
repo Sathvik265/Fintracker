@@ -7,7 +7,7 @@ import {
   DeleteOutlined,
 } from "@ant-design/icons";
 import Layout from "../components/Layout/Layout";
-import axios from "axios";
+import api from "../utils/api";
 import Spinner from "../components/Spinner";
 import moment from "moment";
 import Analytics from "../components/Analytics";
@@ -124,7 +124,7 @@ const HomePage = () => {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         setLoading(true);
-        const res = await axios.post("/api/v1/transactions/get-transaction", {
+        const res = await api.post("/api/v1/transactions/get-transaction", {
           userid: user._id,
           frequency,
           selectedRange,
@@ -143,7 +143,7 @@ const HomePage = () => {
   const handleDelete = async (record) => {
     try {
       setLoading(true);
-      await axios.post("/api/v1/transactions/delete-transaction", {
+      await api.post("/api/v1/transactions/delete-transaction", {
         transactionId: record._id,
       });
       setLoading(false);
@@ -162,13 +162,13 @@ const HomePage = () => {
       const user = JSON.parse(localStorage.getItem("user"));
       setLoading(true);
       if (editable) {
-        await axios.post("/api/v1/transactions/edit-transaction", {
+        await api.post("/api/v1/transactions/edit-transaction", {
           payload: { ...values, userid: user._id },
           transactionId: editable._id,
         });
         message.success("Updated");
       } else {
-        await axios.post("/api/v1/transactions/add-transaction", {
+        await api.post("/api/v1/transactions/add-transaction", {
           ...values,
           userid: user._id,
         });
@@ -188,7 +188,7 @@ const HomePage = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       setLoading(true);
-      const res = await axios.post(
+      const res = await api.post(
         "/api/v1/transactions/export-transaction",
         { userid: user._id, frequency, selectedRange, type },
         { responseType: "blob" }

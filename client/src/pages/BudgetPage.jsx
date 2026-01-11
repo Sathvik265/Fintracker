@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Select, message, Modal, Progress } from "antd";
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import Layout from "../components/Layout/Layout";
-import axios from "axios";
+import api from "../utils/api";
 import Spinner from "../components/Spinner";
 import {
   AlertTriangle,
@@ -37,7 +37,7 @@ const BudgetPage = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       setLoading(true);
-      const res = await axios.post("/api/v1/budgets/budget-status", {
+      const res = await api.post("/api/v1/budgets/budget-status", {
         userid: user._id,
       });
       setLoading(false);
@@ -72,7 +72,7 @@ const BudgetPage = () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
       setLoading(true);
-      await axios.post("/api/v1/budgets/set-budget", {
+      await api.post("/api/v1/budgets/set-budget", {
         userid: user._id,
         ...values,
       });
@@ -92,7 +92,7 @@ const BudgetPage = () => {
   const handleDelete = async (budgetId) => {
     try {
       setLoading(true);
-      await axios.post("/api/v1/budgets/delete-budget", { budgetId });
+      await api.post("/api/v1/budgets/delete-budget", { budgetId });
       setLoading(false);
       message.success("Budget deleted");
       fetchBudgetStatus();

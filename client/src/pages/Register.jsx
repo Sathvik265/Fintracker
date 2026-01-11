@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../utils/api";
 import { ArrowRight } from "lucide-react";
 
 const Register = () => {
@@ -11,7 +11,7 @@ const Register = () => {
   const submitHandler = async (values) => {
     try {
       setLoading(true);
-      await axios.post("/api/v1/users/register", values);
+      await api.post("/api/v1/users/register", values);
       message.success("Account created");
       setLoading(false);
       navigate("/login");
